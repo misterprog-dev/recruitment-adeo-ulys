@@ -59,4 +59,13 @@ class EventServiceTest {
         verify(existingEvent).update(newEvent.getNbStars(), newEvent.getComment());
         verify(eventRepository).save(existingEvent);
     }
+
+    @Test
+    void should_delete_event() {
+        // When
+        eventService.delete(1L);
+
+        // Then
+        verify(eventRepository).delete(1L);
+    }
 }
