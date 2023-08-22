@@ -1,5 +1,8 @@
-package adeo.leroymerlin.cdp;
+package adeo.leroymerlin.cdp.service;
 
+import adeo.leroymerlin.cdp.model.Event;
+import adeo.leroymerlin.cdp.exception.EventNotFoundException;
+import adeo.leroymerlin.cdp.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +31,13 @@ public class EventService {
         // Filter the events list in pure JAVA here
 
         return events;
+    }
+
+    public void update(Long id, Event event) {
+        Event eventToUpdate = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event [" + id + "] not found"));
+
+        eventToUpdate.update(event.getNbStars(), event.getComment());
+        eventRepository.save(eventToUpdate);
     }
 }

@@ -1,4 +1,4 @@
-package adeo.leroymerlin.cdp;
+package adeo.leroymerlin.cdp.model;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -19,6 +19,11 @@ public class Event {
     private Integer nbStars;
 
     private String comment;
+
+    public void update(Integer nbStars, String comment) {
+        this.nbStars = nbStars;
+        this.comment = comment;
+    }
 
     public Long getId() {
         return id;
