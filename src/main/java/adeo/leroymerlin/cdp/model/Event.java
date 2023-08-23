@@ -59,15 +59,22 @@ public class Event {
         return getBands().stream()
                 .map(b -> {
                     Band band = new Band();
-                    band.setName(b.getName());
-                    band.setMembers(b.getMembersNameContains(value));
+                    Set<Member> members = b.getMembersNameContains(value);
+                    band.setName(b.getName() + " [" + members.size() + "]");
+                    band.setMembers(members);
                     return band;
                 })
                 .filter(b -> !b.getMembers().isEmpty())
                 .collect(toSet());
     }
 
-    public List<Member> getBandsMembers() {
+    public List<String> bandsName() {
+        return getBands().stream()
+                .map(Band::getName)
+                .collect(toList());
+    }
+
+    public List<Member> bandsMembers() {
         return getBands().stream()
                 .map(Band::getMembers)
                 .flatMap(Collection::stream)

@@ -124,7 +124,7 @@ class EventServiceTest {
         // Then
         verify(eventRepository).findAllBy();
         assertThat(results).hasSize(1)
-                .extracting(Event::getId, Event::getTitle, Event::getBandsMembers)
-                .containsOnly(Tuple.tuple(1L, "Motocultor", singletonList(member2)));
+                .extracting(Event::getId, Event::getTitle, Event::bandsName, Event::bandsMembers)
+                .containsOnly(Tuple.tuple(1L, "Motocultor [1]", singletonList("Sum41 [1]") , singletonList(member2)));
     }
 }

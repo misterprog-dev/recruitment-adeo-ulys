@@ -1,12 +1,14 @@
 package adeo.leroymerlin.cdp.service;
 
 import adeo.leroymerlin.cdp.exception.EventNotFoundException;
+import adeo.leroymerlin.cdp.model.Band;
 import adeo.leroymerlin.cdp.model.Event;
 import adeo.leroymerlin.cdp.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,11 +40,12 @@ public class EventService {
     private Event constructEvent(String query, Event e) {
         Event event = new Event();
         event.setId(e.getId());
-        event.setTitle(e.getTitle());
+        Set<Band> bandsWithMembers = e.getBandsWithMembersNameContains(query);
+        event.setTitle(e.getTitle() + " [" + bandsWithMembers.size() + "]");
         event.setComment(e.getComment());
         event.setImgUrl(e.getImgUrl());
         event.setNbStars(e.getNbStars());
-        event.setBands(e.getBandsWithMembersNameContains(query));
+        event.setBands(bandsWithMembers);
         return event;
     }
 
