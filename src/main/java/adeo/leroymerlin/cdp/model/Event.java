@@ -1,7 +1,13 @@
 package adeo.leroymerlin.cdp.model;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Entity
 public class Event {
@@ -14,7 +20,7 @@ public class Event {
     private String imgUrl;
 
     @OneToMany(fetch=FetchType.EAGER)
-    private Set<Band> bands;
+    private Set<Band> bands = new HashSet<>();
 
     private Integer nbStars;
 
@@ -25,51 +31,70 @@ public class Event {
         this.comment = comment;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
-    }
-
-    public Set<Band> getBands() {
-        return bands;
     }
 
     public void setBands(Set<Band> bands) {
         this.bands = bands;
     }
 
-    public Integer getNbStars() {
-        return nbStars;
-    }
-
     public void setNbStars(Integer nbStars) {
         this.nbStars = nbStars;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Set<Band> getBandsWithMembersNameContains(String value) {
+        return getBands().stream()
+                .map(b -> {
+                    Band band = new Band();
+                    band.setName(b.getName());
+                    band.setMembers(b.getMembersNameContains(value));
+                    return band;
+                })
+                .filter(b -> !b.getMembers().isEmpty())
+                .collect(toSet());
+    }
+
+    public List<Member> getBandsMembers() {
+        return getBands().stream()
+                .map(Band::getMembers)
+                .flatMap(Collection::stream)
+                .collect(toList());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public Set<Band> getBands() {
+        return bands;
+    }
+
+    public Integer getNbStars() {
+        return nbStars;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }
