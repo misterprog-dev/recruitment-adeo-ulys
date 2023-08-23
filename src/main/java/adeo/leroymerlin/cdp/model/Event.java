@@ -57,15 +57,17 @@ public class Event {
 
     public Set<Band> getBandsWithMembersNameContains(String value) {
         return getBands().stream()
-                .map(b -> {
-                    Band band = new Band();
-                    Set<Member> members = b.getMembersNameContains(value);
-                    band.setName(b.getName() + " [" + members.size() + "]");
-                    band.setMembers(members);
-                    return band;
-                })
+                .map(b -> constructBand(value, b))
                 .filter(b -> !b.getMembers().isEmpty())
                 .collect(toSet());
+    }
+
+    private Band constructBand(String value, Band b) {
+        Band band = new Band();
+        Set<Member> members = b.getMembersNameContains(value);
+        band.setName(b.getName() + " [" + members.size() + "]");
+        band.setMembers(members);
+        return band;
     }
 
     public List<String> bandsName() {
