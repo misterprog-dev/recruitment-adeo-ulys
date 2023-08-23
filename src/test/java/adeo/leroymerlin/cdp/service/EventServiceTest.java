@@ -127,4 +127,26 @@ class EventServiceTest {
                 .extracting(Event::getId, Event::getTitle, Event::bandsName, Event::bandsMembers)
                 .containsOnly(Tuple.tuple(1L, "Motocultor [1]", singletonList("Sum41 [1]") , singletonList(member2)));
     }
+
+    @Test
+    void should_get_events() {
+        // Given
+        Set<Band> bands1 = new HashSet<>();
+        Set<Band> bands2 = new HashSet<>();
+        bands1.add(new BandMB().withName("Sum41").build());
+        bands2.add(new BandMB().withName("Pink Floyd").build());
+        List<Event> events = new ArrayList<>();
+        events.add(new EventMB().withId(1L).withTitle("Motocultor").withBands(bands1).build());
+        events.add(new EventMB().withId(2L).withTitle("Download Festival").withBands(bands2).build());
+        when(eventRepository.findAllBy()).thenReturn(events);
+
+        // When
+        List<Event> results = eventService.getEvents();
+
+        // Then
+        verify(eventRepository).findAllBy();
+        assertThat(results).hasSize(2)
+                .extracting(Event::getTitle)
+                .containsOnly("Motocultor", "Download Festival");
+    }
 }
